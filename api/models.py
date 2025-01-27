@@ -18,7 +18,7 @@ class Product(models.Model):
     stock = models.IntegerField()
     description = models.TextField()
     type_id = models.ForeignKey('ProductType', on_delete=models.SET_NULL, null=True)
-    department_id = models.ManyToManyField('Department')
+    department_id = models.ManyToManyField('Department', blank=True)
 
 class ProductType(models.Model):
     name = models.CharField(max_length=200)
