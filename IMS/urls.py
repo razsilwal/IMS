@@ -20,7 +20,13 @@ from api.views import ProductApiView, ProductTypeApiView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('product-type/', ProductTypeApiView.as_view({'get':'list'})), 
+    path('product-type/', ProductTypeApiView.as_view({'get':'list', 'post':'create'})), 
+    path('product-type/<int:pk>/', ProductTypeApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'delete'})), 
     path('product/', ProductApiView.as_view({'get':'list', 'post':'create'})), 
     path('product/<int:pk>/', ProductApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})), 
 ]
+# pip freeze > requirements.txt'
+
+# pip install -r requirement.txt
+
+# git rm --cached env
