@@ -16,13 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import ProductApiView, ProductTypeApiView
+from api.views import ProductApiView, ProductTypeApiView, DepartmentApiView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('product-type/', ProductTypeApiView.as_view({'get':'list', 'post':'create'})), 
     path('product-type/<int:pk>/', ProductTypeApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'delete'})), 
     path('product/', ProductApiView.as_view({'get':'list', 'post':'create'})), 
+    path('department/', DepartmentApiView.as_view({'get':'list', 'post':'create'})), 
+    path('department/<int:pk>/', DepartmentApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})), 
     path('product/<int:pk>/', ProductApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})), 
 ]
 # pip freeze > requirements.txt'

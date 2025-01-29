@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from .models import Product, ProductType
-from .serializers import ProductSerializer, ProductTypeSerializer
+from .models import Product, ProductType, Department
+from .serializers import ProductSerializer, ProductTypeSerializer, DepartmentSerializer
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -62,4 +62,51 @@ class ProductTypeApiView(GenericViewSet): # custom response logic
     def delete(self, request, pk):
         product_type_obj = self.get_object()
         product_type_obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class DepartmentApiView(GenericViewSet):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer
+
+    def list(self, request):
+        department_obj = self.get_queryset()
+        serializer = self.get_serializer(department_obj, many=True)
+        return Response(serializer.data)
+    
+    def create(self, request):
+        serializer = self.get_serializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    def retrieve(self, request, pk):
+        department_obj = self.get_object()
+        serializer = self.get_serializer(department_obj)
+        return Response(serializer.data)
+    
+    def update(self, request, pk):
+        department_obj = self.get_object()
+        serializer  = self.get_serializer(department_obj, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def partial_update(self, request, pk):
+        department_obj = self.get_object()
+        serializer = self.get_serializer(department_obj, data = request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    
+    def destroy(self, request, pk):
+        department_obj = self.get_object()
+        department_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
