@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import ProductApiView, ProductTypeApiView, DepartmentApiView
+from api.views import ProductApiView, ProductTypeApiView, DepartmentApiView, register_api_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,7 +25,8 @@ urlpatterns = [
     path('product/', ProductApiView.as_view({'get':'list', 'post':'create'})), 
     path('department/', DepartmentApiView.as_view({'get':'list', 'post':'create'})), 
     path('department/<int:pk>/', DepartmentApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})), 
-    path('product/<int:pk>/', ProductApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})), 
+    path('product/<int:pk>/', ProductApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})),
+    path('register/', register_api_view), 
 ]
 # pip freeze > requirements.txt'
 

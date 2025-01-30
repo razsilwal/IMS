@@ -1,15 +1,18 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from .models import Product, ProductType, Department
-from .serializers import ProductSerializer, ProductTypeSerializer, DepartmentSerializer
+from .serializers import ProductSerializer, ProductTypeSerializer, DepartmentSerializer, UserSerializer
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 # Create your views here.
 
 class ProductApiView(ModelViewSet): #modelviewset have all the logic about crud operations
     queryset = Product.objects.all()
     serializer_class = ProductSerializer # it helps to response 
+    permission_classes = [IsAuthenticated] # it helps to authenticate the user
+
 
 class ProductTypeApiView(GenericViewSet): # custom response logic 
     queryset = ProductType.objects.all()
@@ -110,3 +113,14 @@ class DepartmentApiView(GenericViewSet):
         department_obj = self.get_object()
         department_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def register_api_view(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        user.set_password(user.password)
+        user.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
