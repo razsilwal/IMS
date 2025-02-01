@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+
 # Create your views here.
 
 class ProductApiView(ModelViewSet): #modelviewset have all the logic about crud operations
@@ -118,9 +121,21 @@ class DepartmentApiView(GenericViewSet):
 def register_api_view(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        user = serializer.save()
-        user.set_password(user.password)
-        user.save()
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def login_api_view(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    user = authenticate(username=email, password=password)
+
+    if user == None:
+        return Response({'detail':'Invalid Credentials'},status=status.HTTP_400_BAD_REQUEST)
+    
+    token,_ = Token.objects.get_or_create(user=user)
+
+    return Response(token.key)

@@ -11,6 +11,10 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    def save(self,*args,**kwargs):
+        self.set_password(self.password)
+        super(User, self).save(*args,**kwargs)
+
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
