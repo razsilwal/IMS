@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import ProductApiView, ProductTypeApiView, DepartmentApiView, register_api_view, login_api_view
+from api.views import ProductApiView, ProductTypeApiView, DepartmentApiView, PurchaseApiView,SellApiView, VendorApiView, group_api_view, register_api_view, login_api_view, otp_verify
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,10 +24,20 @@ urlpatterns = [
     path('product-type/<int:pk>/', ProductTypeApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'delete'})), 
     path('product/', ProductApiView.as_view({'get':'list', 'post':'create'})), 
     path('department/', DepartmentApiView.as_view({'get':'list', 'post':'create'})), 
+    path('purchase/', PurchaseApiView.as_view({'get':'list', 'post':'create'})), 
+    path('sell/', SellApiView.as_view({'get':'list', 'post':'create'})), 
+    path('vendor/', VendorApiView.as_view({'get':'list', 'post':'create'})), 
+    path('sell/<int:pk>/', SellApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})), 
+    path('vendor/<int:pk>/', VendorApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})), 
     path('department/<int:pk>/', DepartmentApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})), 
     path('product/<int:pk>/', ProductApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})),
+    path('purchase/<int:pk>/', PurchaseApiView.as_view({'get':'retrieve', 'put':'update', 'patch':'partial_update', 'delete':'destroy'})),
     path('register/', register_api_view), 
-    path('login/', login_api_view), 
+    path('login/', login_api_view),
+    path('groups/', group_api_view),
+    path('otp-verify/', otp_verify),
+ 
+ 
 ]
 # pip freeze > requirements.txt'
 

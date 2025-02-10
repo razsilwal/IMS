@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 # Create your models here.
 
 class User(AbstractUser):
@@ -7,14 +7,15 @@ class User(AbstractUser):
     password = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     image = models.FileField(upload_to='media/user/')
+    groups = models.ForeignKey(Group, on_delete=models.SET_NULL,null=True)
+
+    is_active = models.BooleanField(default=True)
+    otp = models.IntegerField(null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    def save(self,*args,**kwargs):
-        self.set_password(self.password)
-        super(User, self).save(*args,**kwargs)
-
+    
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
@@ -36,7 +37,7 @@ class Purchase(models.Model):
     price = models.FloatField()
     quantity =  models.IntegerField()
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE) 
-    vendor_id = models.ForeignKey('vendor', on_delete=models.CASCADE)
+    vendor_id = models.ForeignKey('vendor', on_delete=models.CASCADE, null=True, blank=True)
     user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
 class Sell(models.Model):
